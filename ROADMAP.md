@@ -1,32 +1,14 @@
 # Roadmap
 
-## Milestone: 0.1.x (Foundation)
+## v1.0.0 (Current)
 
-- [x] crate/module scaffolding
-- [x] CLI entrypoint
-- [x] core config/error model
-- [x] atomic/smart JSON writes
-- [x] repository listing + mirror clone/fetch
-- [ ] retry + rate-limit handling integrated in API client
+- [x] Clone all repositories for a user
+- [x] Clone all repositories for an organization
+- [x] Update existing local clones on rerun
+- [x] Support targeted backups with `--repo owner/repo`
 
-## Milestone: 0.2.x (Resource Coverage)
+## Next
 
-- [ ] issues + comments + events
-- [ ] pull requests + review comments + commits
-- [ ] releases + asset downloads
-- [ ] labels + milestones + hooks + security advisories
-- [ ] wiki + gists + account resources
-
-## Milestone: 0.3.x (Parity and Reliability)
-
-- [ ] incremental modes
-- [ ] attachment extraction/download + manifest
-- [ ] platform auth parity (classic/fine PAT, app, token file, keychain)
-- [ ] robust retry semantics (`Retry-After`, `X-RateLimit-Reset`, jitter)
-- [ ] integration tests against mock GitHub API
-
-## Milestone: 1.0.0
-
-- [ ] feature coverage baseline for all documented resources
-- [ ] stable CLI contracts
-- [ ] signed release binaries and release notes
+- [ ] Optional include/exclude filters
+- [ ] Optional backup report output
+- [ ] Parallel clone/update scheduling improvements

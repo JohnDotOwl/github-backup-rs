@@ -8,7 +8,6 @@ pub mod filter;
 pub mod git;
 pub mod incremental;
 pub mod io;
-pub mod plugin;
 
 pub use config::BackupConfig;
 pub use error::{ApiError, AuthError, BackupError, GitError, Result};

@@ -2,20 +2,16 @@ use std::{path::Path, process::Command};
 
 use crate::error::GitError;
 
-pub fn clone_mirror(url: &str, destination: &Path) -> std::result::Result<(), GitError> {
+pub fn clone_repository(url: &str, destination: &Path) -> std::result::Result<(), GitError> {
     run_git_command(
-        &[
-            "clone",
-            "--mirror",
-            url,
-            destination.to_string_lossy().as_ref(),
-        ],
+        &["clone", url, destination.to_string_lossy().as_ref()],
         None,
     )
 }
 
-pub fn fetch_mirror(destination: &Path) -> std::result::Result<(), GitError> {
-    run_git_command(&["fetch", "--all", "--prune"], Some(destination))
+pub fn update_repository(destination: &Path) -> std::result::Result<(), GitError> {
+    run_git_command(&["fetch", "--all", "--prune"], Some(destination))?;
+    run_git_command(&["pull", "--ff-only"], Some(destination))
 }
 
 pub fn ls_remote(url: &str) -> std::result::Result<(), GitError> {

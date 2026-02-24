@@ -42,7 +42,7 @@ pub async fn backup_repositories(config: &BackupConfig) -> Result<()> {
         );
     }
 
-    backup_git_mirrors(config, &repositories)
+    backup_git_clones(config, &repositories)
 }
 
 async fn retrieve_repositories(
@@ -128,7 +128,7 @@ fn extract_legal_url(message: &str) -> Option<String> {
         .map(ToString::to_string)
 }
 
-fn backup_git_mirrors(config: &BackupConfig, repositories: &[Repository]) -> Result<()> {
+fn backup_git_clones(config: &BackupConfig, repositories: &[Repository]) -> Result<()> {
     let root = config.output_dir.join("repositories");
     fs::create_dir_all(&root)?;
 
@@ -137,7 +137,7 @@ fn backup_git_mirrors(config: &BackupConfig, repositories: &[Repository]) -> Res
             warn!(
                 repo = %repository.full_name,
                 error = %error,
-                "repository mirror step failed, continuing",
+                "repository sync step failed, continuing",
             );
         }
     }
@@ -151,16 +151,16 @@ fn backup_single_repository(root: &Path, repository: &Repository) -> Result<()> 
         .split_once('/')
         .unwrap_or(("unknown", repository.name.as_str()));
 
-    let repository_root = root.join(owner).join(repo_name);
-    let mirror_dir = repository_root.join("repository");
-    fs::create_dir_all(&repository_root)?;
-
-    if mirror_dir.exists() {
-        info!(repo = %repository.full_name, path = %mirror_dir.display(), "updating repository mirror");
-        subprocess::fetch_mirror(&mirror_dir)?;
+    let clone_dir = root.join(owner).join(repo_name);
+    if clone_dir.exists() {
+        info!(repo = %repository.full_name, path = %clone_dir.display(), "updating repository clone");
+        subprocess::update_repository(&clone_dir)?;
     } else {
-        info!(repo = %repository.full_name, path = %mirror_dir.display(), "cloning repository mirror");
-        subprocess::clone_mirror(&repository.clone_url, &mirror_dir)?;
+        if let Some(parent) = clone_dir.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        info!(repo = %repository.full_name, path = %clone_dir.display(), "cloning repository");
+        subprocess::clone_repository(&repository.clone_url, &clone_dir)?;
     }
 
     Ok(())

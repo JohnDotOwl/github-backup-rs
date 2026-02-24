@@ -87,7 +87,10 @@ impl GitHubClient {
         let mut request = self
             .http
             .get(url)
-            .header(USER_AGENT, "github-backup-rs/0.1")
+            .header(
+                USER_AGENT,
+                format!("github-backup-rs/{}", env!("CARGO_PKG_VERSION")),
+            )
             .header(ACCEPT, "application/vnd.github+json");
 
         if let Some(token) = &self.token {
