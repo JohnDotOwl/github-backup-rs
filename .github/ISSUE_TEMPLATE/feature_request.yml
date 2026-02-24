@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a feature to implement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the use case clearly and focus on the outcome you need.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What is missing or painful today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What behavior/API/CLI option do you want?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility details (if applicable)
+      description: Share behavior constraints, migration concerns, or command examples
+    validations:
+      required: false
