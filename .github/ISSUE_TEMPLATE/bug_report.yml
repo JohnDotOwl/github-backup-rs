@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible bug
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill out all fields so we can reproduce quickly.
+
+  - type: input
+    id: command
+    attributes:
+      label: Command used
+      placeholder: cargo run -- octocat --repositories -o /tmp/backup
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / error output
+      description: Paste relevant output
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 14.7 / Ubuntu 24.04 / Windows 11
+    validations:
+      required: true
+
+  - type: input
+    id: rust
+    attributes:
+      label: Rust version
+      placeholder: rustc --version
+    validations:
+      required: true
+

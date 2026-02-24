@@ -1,0 +1,22 @@
+[package]
+name = "github-backup-rs"
+version = "0.1.0"
+edition = "2021"
+description = "GitHub backup tool in Rust with CLI and JSON-RPC plugin mode"
+license = "MIT"
+readme = "README.md"
+keywords = ["github", "backup", "cli", "json-rpc"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+anyhow = "1.0"
+base64 = "0.22"
+clap = { version = "4.5", features = ["derive"] }
+regex = "1.11"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1.44", features = ["io-std", "io-util", "macros", "rt-multi-thread", "signal", "time"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
