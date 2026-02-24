@@ -1,22 +1,16 @@
 # github-backup-rs
 
-Native Rust GitHub backup tool.
+Fast GitHub repository backup tool in Rust.
 
-## Project Status
+`v1.0.0` focuses on one thing: clone and update repositories.
 
-This project is early and not feature-complete yet.
+## What It Does
 
-- Implemented: project scaffold, config/error model, repository discovery + git mirror clone/fetch, atomic/smart JSON writes
-- In progress: expanded coverage for issues, pull requests, releases, account data, attachments, retries/rate-limit handling, and auth edge cases
+- Clones all repositories for a GitHub user or organization
+- Updates existing local clones on repeated runs
+- Supports specific repository selection with `--repo owner/repo`
 
-Until `1.0.0`, expect breaking changes.
-
-## Why This Exists
-
-GitHub backup workflows need predictable, portable tooling. This project targets:
-
-- single static-ish binary distribution
-- lower operational overhead (TLS/runtime/dependency model)
+Repository clone-only scope in `v1.0.0`.
 
 ## Quick Start
 
@@ -28,49 +22,56 @@ GitHub backup workflows need predictable, portable tooling. This project targets
 ### Build
 
 ```bash
-cargo build
+cargo build --release
 ```
 
-### Run CLI
+### Backup All Repositories for a User
 
 ```bash
-cargo run -- <user-or-org> --repositories -o /tmp/backup
+cargo run --release -- <github-username> -o ./backup
 ```
 
-Example:
+### Backup All Repositories for an Organization
 
 ```bash
-cargo run -- octocat --repositories -o /tmp/backup/octocat
+cargo run --release -- <github-org> --organization -o ./backup
+```
+
+### Include Private Repositories
+
+Set `GITHUB_TOKEN` first, then run the same command with your username:
+
+```bash
+export GITHUB_TOKEN=ghp_your_token_here
+cargo run --release -- <your-username> -o ./backup
+```
+
+### Re-run to Update
+
+Run the same command again. Existing repositories are fetched and fast-forwarded.
+
+## Output Layout
+
+```text
+backup/
+  repositories/
+    owner-a/
+      repo-one/
+    owner-b/
+      repo-two/
+  repositories.json
 ```
 
 ## Development
-
-Use these checks before opening a PR:
 
 ```bash
 cargo fmt --check
 cargo test
 ```
 
-## Repository Layout
-
-High-level layout:
-
-- `src/cli/` CLI args and orchestration
-- `src/api/` GitHub API client, pagination, retry, throttling
-- `src/backup/` backup routines per resource type
-- `src/git/` git subprocess wrapper and URL helpers
-- `src/io/` atomic/smart file writes
-- `src/auth/` auth providers (token, file token, keychain, app)
-
-## Project Notes
+## Notes
 
 - License: MIT (`LICENSE`)
 - Security policy: `SECURITY.md`
 - Contribution guidelines: `CONTRIBUTING.md`
-- Milestone plan: `ROADMAP.md`
 - Release notes: `CHANGELOG.md`
-
-## Acknowledgments
-
-Thanks to everyone contributing bug reports, tests, and implementation work.
