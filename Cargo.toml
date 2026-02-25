@@ -6,6 +6,7 @@ description = "Clone and update GitHub repositories in Rust"
 license = "MIT"
 readme = "README.md"
 keywords = ["github", "backup", "cli", "rust"]
+repository = "https://github.com/JohnDotOwl/github-backup-rs"
 categories = ["command-line-utilities"]
 
 [dependencies]
