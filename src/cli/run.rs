@@ -6,6 +6,7 @@ use super::args::CliArgs;
 
 pub async fn run_cli(args: CliArgs) -> Result<()> {
     let config = BackupConfig::from_cli(&args)?;
-    info!("starting backup run from CLI");
+    let start_time = chrono::Local::now().format("%Y-%m-%d %H:%M:%S");
+    info!("[{}] starting backup run from CLI", start_time);
     BackupOrchestrator::new(config).run().await
 }
