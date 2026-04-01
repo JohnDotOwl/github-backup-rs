@@ -132,8 +132,10 @@ fn backup_git_clones(config: &BackupConfig, repositories: &[Repository]) -> Resu
     let root = config.output_dir.join("repositories");
     fs::create_dir_all(&root)?;
 
-    for repository in repositories {
-        if let Err(error) = backup_single_repository(&root, repository) {
+    let total = repositories.len();
+    for (idx, repository) in repositories.iter().enumerate() {
+        let progress = format!("[{}/{}]", idx + 1, total);
+        if let Err(error) = backup_single_repository(&root, repository, &progress) {
             warn!(
                 repo = %repository.full_name,
                 error = %error,
@@ -145,7 +147,7 @@ fn backup_git_clones(config: &BackupConfig, repositories: &[Repository]) -> Resu
     Ok(())
 }
 
-fn backup_single_repository(root: &Path, repository: &Repository) -> Result<()> {
+fn backup_single_repository(root: &Path, repository: &Repository, progress: &str) -> Result<()> {
     let (owner, repo_name) = repository
         .full_name
         .split_once('/')
@@ -153,13 +155,13 @@ fn backup_single_repository(root: &Path, repository: &Repository) -> Result<()> 
 
     let clone_dir = root.join(owner).join(repo_name);
     if clone_dir.exists() {
-        info!(repo = %repository.full_name, path = %clone_dir.display(), "updating repository clone");
+        info!(%progress, repo = %repository.full_name, path = %clone_dir.display(), "updating repository clone");
         subprocess::update_repository(&clone_dir)?;
     } else {
         if let Some(parent) = clone_dir.parent() {
             fs::create_dir_all(parent)?;
         }
-        info!(repo = %repository.full_name, path = %clone_dir.display(), "cloning repository");
+        info!(%progress, repo = %repository.full_name, path = %clone_dir.display(), "cloning repository");
         subprocess::clone_repository(&repository.clone_url, &clone_dir)?;
     }
 
