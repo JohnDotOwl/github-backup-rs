@@ -133,17 +133,25 @@ fn backup_git_clones(config: &BackupConfig, repositories: &[Repository]) -> Resu
     fs::create_dir_all(&root)?;
 
     let total = repositories.len();
+    let mut success = 0;
+    let mut failed = 0;
+
     for (idx, repository) in repositories.iter().enumerate() {
         let progress = format!("[{}/{}]", idx + 1, total);
-        if let Err(error) = backup_single_repository(&root, repository, &progress) {
-            warn!(
-                repo = %repository.full_name,
-                error = %error,
-                "repository sync step failed, continuing",
-            );
+        match backup_single_repository(&root, repository, &progress) {
+            Ok(()) => success += 1,
+            Err(error) => {
+                failed += 1;
+                warn!(
+                    repo = %repository.full_name,
+                    error = %error,
+                    "repository sync step failed, continuing",
+                );
+            }
         }
     }
 
+    info!(total, success, failed, "backup complete");
     Ok(())
 }
 
