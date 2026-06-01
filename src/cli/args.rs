@@ -44,4 +44,7 @@ pub struct CliArgs {
 
     #[arg(long)]
     pub api_base_url: Option<String>,
+
+    #[arg(long, default_value_t = false)]
+    pub dry_run: bool,
 }

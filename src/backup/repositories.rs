@@ -135,18 +135,24 @@ fn backup_git_clones(config: &BackupConfig, repositories: &[Repository]) -> Resu
     let total = repositories.len();
     let mut success = 0;
     let mut failed = 0;
+    let dry_run = config.runtime.dry_run;
 
     for (idx, repository) in repositories.iter().enumerate() {
         let progress = format!("[{}/{}]", idx + 1, total);
-        match backup_single_repository(&root, repository, &progress) {
-            Ok(()) => success += 1,
-            Err(error) => {
-                failed += 1;
-                warn!(
-                    repo = %repository.full_name,
-                    error = %error,
-                    "repository sync step failed, continuing",
-                );
+        if dry_run {
+            info!(%progress, repo = %repository.full_name, "dry-run: would sync repository");
+            success += 1;
+        } else {
+            match backup_single_repository(&root, repository, &progress) {
+                Ok(()) => success += 1,
+                Err(error) => {
+                    failed += 1;
+                    warn!(
+                        repo = %repository.full_name,
+                        error = %error,
+                        "repository sync step failed, continuing",
+                    );
+                }
             }
         }
     }
