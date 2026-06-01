@@ -46,6 +46,7 @@ impl BackupConfig {
                     .api_base_url
                     .clone()
                     .unwrap_or_else(|| "https://api.github.com".to_string()),
+                dry_run: args.dry_run,
             },
         };
 
@@ -99,4 +100,5 @@ pub struct RuntimeConfig {
     pub max_retries: u32,
     pub request_timeout_seconds: u64,
     pub api_base_url: String,
+    pub dry_run: bool,
 }
